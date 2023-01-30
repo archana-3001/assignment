@@ -1,0 +1,38 @@
+{
+  "name": "assignment",
+  "version": "1.0.0",
+  "description": "* web basics - HTTP\r    * HTTP\r    * HTTPS\r    * SSL/TLS \r    * HTTP METHODS",
+  "main": "index.js",
+  "module": "commonjs",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/src/index.js",
+    "dev": "npx tsc && nodemon dist/src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archana-3001/assignment.git"
+  },
+  "author": "archana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/archana-3001/assignment/issues"
+  },
+  "homepage": "https://github.com/archana-3001/assignment#readme",
+  "dependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/node": "^18.11.18",
+    "bcryptjs": "^2.4.3",
+    "cassandra-driver": "^4.6.4",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.7.0",
+    "nodemon": "^2.0.20",
+    "typecript": "^0.0.1-security",
+    "typescript": "^4.1.6"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.16",
+    "@types/express-serve-static-core": "^4.17.30"
+  }
+}
