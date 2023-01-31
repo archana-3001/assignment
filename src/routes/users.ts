@@ -4,10 +4,16 @@ import { request } from "http";
 import cassandra from 'cassandra-driver';
 import userValidation from "../middleware/userValidation";
 import addUser from "../controller/users";
+const { getClientWithKeyspace } = require('../db');
+
+const cluster = getClientWithKeyspace();
 
 const userRouter=Router();
 
 userRouter.get('/', (request,  response)=>{
+    // const query = 'SELECT * from users';
+    // const res=cluster.execute(query);
+    // console.log(res);
     response.send("hello from all users !!!!");
 });
 

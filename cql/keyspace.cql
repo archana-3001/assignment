@@ -1,1 +1,0 @@
-CREATE KEYSPACE IF NOT EXISTS test WITH replication = { 'class': 'NetworkTopologyStrategy', 'replication_factor': '3' };
