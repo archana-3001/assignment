@@ -35,7 +35,13 @@ export default async function addUser(req, res, next){
                                     res5.then(msg=>{
                                         const res6=cluster.execute(query6);
                                         res6.then((msg)=>{
-                                            return res.status(200).send('user added');
+                                            const res7=cluster.execute(query7);
+                                            res7.then((msg)=>{
+                                                return res.status(200).send('user added');
+                                            }).catch(err=>{
+                                                console.log(err);
+                                            }
+                                            )
                                         }).catch(err=>{
                                             console.log(err);
                                         })
@@ -51,15 +57,15 @@ export default async function addUser(req, res, next){
                             }
 
                         }else{
-                            return res.status(401).json({ err: 'user exists' });
+                            return res.status(401).json({ err: 'phone number already exists' });
                         }
                     })
                 }else{
-                    return res.status(401).json({ err: 'user exists' });
+                    return res.status(401).json({ err: 'email already exists' });
                 }
             })
         }else{
-            return res.status(401).json({ err: 'user exists' });
+            return res.status(401).json({ err: 'username already exists' });
         }
 
        })
