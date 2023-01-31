@@ -6,27 +6,14 @@ import userRouter from './routes/users';
 
 dotenv.config();
 
-
 const app : Express = express(); 
 const port = process.env.PORT;
 
 app.use(express.json());
 
-const query = 'SELECT * from students';
-
-
-
 app.get("/", (req: Request, res: Response)=>{
-    try{
-      // const val=client.execute(query).then((res)=>{
-      //   console.log(res.rows[0].first_name);
-      // });
-      res.send("hello from server side !!");
-
-    }catch{
-      console.log("error in server side");
-    }
-  });
+    res.send("hello from server listening to ${port}");
+});
 
 app.use('/api/users', userRouter);
 
@@ -34,3 +21,4 @@ app.use('/api/users', userRouter);
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
   });
+
