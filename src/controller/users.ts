@@ -6,15 +6,14 @@ import { v4 as uuidv4 } from 'uuid';
 export default async function addUser(req, res, next){
     try{
        // write code to validate
-       const Username=req.body.Username;
-       const email=req.body.email;
-       const Phone_number=req.body.Phone_number;
-       const id = uuidv4();
-       console.log(Username, typeof(Username)); 
-       const query1=`SELECT * FROM unique_usernames WHERE Username='${Username}';`;
-       const query2=`SELECT * FROM unique_emails WHERE email='${email}';`;
-       const query3=`SELECT * FROM unique_phone_numbers WHERE Phone_number='${Phone_number}';`;
+       const id = uuidv4(); 
+       const query1=`SELECT * FROM unique_usernames WHERE Username='${req.body.Username}';`;
+       const query2=`SELECT * FROM unique_emails WHERE email='${req.body.email}';`;
+       const query3=`SELECT * FROM unique_phone_numbers WHERE Phone_number='${req.body.Phone_number}';`;
        const query4=`INSERT INTO users(ID, First_name, Last_name, Username, email, Phone_number, Is_active, Is_admin, Password) VALUES (${id}, '${req.body.First_name}', '${req.body.Last_name}', '${req.body.Username}', '${req.body.email}', '${req.body.Phone_number}', ${req.body.Is_active}, ${req.body.Is_admin}, '${req.body.Password}');`;
+       const query5=`INSERT INTO unique_usernames(Username) VALUES ('${req.body.Username}')`;
+       const query6=`INSERT INTO unique_emails(email) VALUES ('${req.body.email}')`;
+       const query7=`INSERT INTO unique_phone_numbers(Phone_number) VALUES ('${req.body.Phone_number}')`;
        console.log(query1);
        const res1=cluster.execute(query1);
        res1.then(stats=>{
@@ -32,8 +31,17 @@ export default async function addUser(req, res, next){
                             try{
                                 const res4=cluster.execute(query4);
                                 res4.then(msg=>{
-                                    console.log(msg);
-                                    return res.status(200).send('user added');
+                                    const res5=cluster.execute(query5);
+                                    res5.then(msg=>{
+                                        const res6=cluster.execute(query6);
+                                        res6.then((msg)=>{
+                                            return res.status(200).send('user added');
+                                        }).catch(err=>{
+                                            console.log(err);
+                                        })
+                                    }).catch(err=>{
+                                        console.log(err);
+                                    })
                                 }).catch(err=>{
                                     console.log(err);
                                 })
