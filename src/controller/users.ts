@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 
 
-export default async function addUser(req, res, next){
+export  async function addUser(req, res, next){
     try{
        // write code to validate
        const id = uuidv4(); 
@@ -82,4 +82,9 @@ export default async function addUser(req, res, next){
             error: "error in hash creation"
         })
     };
+}
+
+
+export async function updateUser(req, res, next){
+    res.send("update request got !!");
 }
