@@ -2,7 +2,7 @@ import { Express, Request, Response } from 'express';
 import express from 'express';
 import dotenv from 'dotenv';
 import userRouter from './routes/users';
-
+import authRouter from './routes/auth';
 
 dotenv.config();
 
@@ -15,6 +15,7 @@ app.get("/", (req: Request, res: Response)=>{
     res.send("hello from server listening to ${port}");
 });
 
+app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 
 //express server

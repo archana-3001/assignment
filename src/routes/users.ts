@@ -1,10 +1,9 @@
 //  create/update/read/delete users from the system
-import e, { Router, response, query } from "express";
+import  { Router, response, query } from "express";
 import { request } from "http";
 import userValidation from "../middleware/userValidation";
 import addUser from "../controller/users";
 import {getConnection } from '../db'; 
-import { FORMERR } from "dns";
 
 
 const userRouter=Router();
@@ -49,7 +48,7 @@ userRouter.get('/', (request,  response)=>{
 
 userRouter.patch('/', (request, response) =>{
     // console.log(request.query);
-    
+
     response.send("attribute added !!!");
 });
 
