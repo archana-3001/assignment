@@ -85,6 +85,3 @@ export  async function addUser(req, res, next){
 }
 
 
-export async function updateUser(req, res, next){
-    res.send("update request got !!");
-}
