@@ -79,7 +79,7 @@ if(keys.length!=0){
                                     
                                     // insert into unique_phone_numbers table as well as users table and delete previous phone_number
                                     // step 1: delete previous phone_number of user
-                                    const query3=`DELETE FROM unique_phone_numbers WHERE Phone_number='${val.rows[0].phone_number}'; `
+                                    const query3=`DELETE FROM unique_phone_numbers WHERE Phone_number='${val.rows[0].phone_number}'; `;
                                     cluster.execute(query3).then(()=>{
                                         // user previous email has been deleted 
                                         // step 2: insert into users table and then in unique_emails

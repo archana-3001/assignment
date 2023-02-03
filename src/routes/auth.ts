@@ -8,7 +8,7 @@ const authRouter=Router();
 
 
 authRouter.post('/login', (request, response, next)=>{
-    // console.log(request.body);
+    console.log(request.body);
     const password=request.body.Password; // here create hash of entered password and then match hash with stored hash
     const query=`SELECT * from users WHERE Username= '${request.body.Username}' ALLOW FILTERING;`;
     console.log(query);
@@ -25,6 +25,7 @@ authRouter.post('/login', (request, response, next)=>{
                         let jwtToken = jwt.sign({
                             Username: val.rows[0].username,
                             userId: val.rows[0].id,
+                            Is_admin: val.rows[0].is_admin
                         }, 'APP_SECRET', {
                             expiresIn: "1h"
                         });
@@ -32,6 +33,7 @@ authRouter.post('/login', (request, response, next)=>{
                             token: jwtToken,
                             expiresIn: 3600,
                             userId: val.rows[0].id,
+                            Is_admin: val.rows[0].is_admin,
                             msg: "login successful !!"
                     });
                     }else{
