@@ -1,4 +1,64 @@
-﻿* web basics - HTTP
+﻿Backend: 
+
+Src—----
+
+
+    • Controller—---------
+    
+        ◦ updateAttributes : update Attributes if validation successful
+    
+        ◦ Users : update user and create new user after validation
+
+
+    • Middleware—--------
+
+        ◦ Auth.ts for jwt verification
+
+        ◦ updateValidation : validation for specific attributes
+
+        ◦ userUpdateValidation : validation for complete user update
+
+        ◦ userValidation : validation before creating users
+
+
+    • Routes—--------------
+
+        ◦ Auth.ts : contains routes for login
+
+        ◦ Users.ts : contains routes for CRUD
+
+
+    • Db.ts :  details and connection to db
+
+
+    • Index.ts : root file to create server 
+
+
+    • User.validators.ts : contains joi validation schema
+
+
+    • Get user: http://localhost:8000/api/users (get request)
+
+
+    • Getuser with specific attributes: http://localhost:8000/api/users?&First_name='user' (get request with query)
+
+
+    • Create user:  http://localhost:8000/api/users (Post request)
+
+
+    • Delete user : http://localhost:8000/api/users (Delete request)
+
+
+    • Update attributes : http://localhost:8000/api/users (Patch request)
+
+
+    • Update user all attributes:  http://localhost:8000/api/users (Put request)
+
+
+    • Login : http://localhost:8000/api/auth/login  (Post request) with username and password
+
+
+* web basics - HTTP
    * HTTP
    * HTTPS
    * SSL/TLS 

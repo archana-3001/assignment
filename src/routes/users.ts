@@ -15,7 +15,7 @@ export const cluster=getConnection();
 // GET USER WITH USER ID
 userRouter.get('/', (request,  response)=>{
     
-    console.log(request.query);
+    // console.log(request.query);
     const keys= Object.keys(request.query);
     if(keys.length!=0){
         var query = `SELECT * from users WHERE `;
