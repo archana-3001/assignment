@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import userRouter from './routes/users';
 import authRouter from './routes/auth';
+import activityRouter from './routes/activity';
 import cors from 'cors';
 
 dotenv.config();
@@ -19,9 +20,11 @@ app.get("/", (req: Request, res: Response)=>{
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
+app.use('/api/activity', activityRouter);
 
 //express server
 app.listen(port, () => {
+    
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
   });
 

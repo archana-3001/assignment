@@ -1,14 +1,19 @@
 import { cluster } from "../routes/users";
 import bcrypt from 'bcryptjs';
+import { createClient } from "redis";
+import { publishUserEvent } from "../kafka";
 
 export async function updateAttributes(request, response, next) {
 console.log("update query", request.body, request.query);
 
+
 const keys= Object.keys(request.query);
 if(keys.length!=0){
-
+    const client = createClient();
+    client.on('error', err => console.log('Redis Client Error', err));
+    await client.connect();
         const query = `SELECT * from users WHERE ID= ${request.query.ID} ALLOW FILTERING;`;
-        
+        client.del(`${request.query.ID}`);
         // console.log(query);
         const res=cluster.execute(query);
         res.then(val=>{
@@ -133,6 +138,7 @@ if(keys.length!=0){
                        
                     }
                 }
+                // publishUserEvent(val.rows[0].id, 'update');
                 return response.status(200).json({msg: "all values updated!!"});
             }
             else{

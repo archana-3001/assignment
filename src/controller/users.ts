@@ -2,7 +2,7 @@ import { stat } from "fs";
 import { cluster } from "../routes/users";
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
-
+import { publishUserEvent } from "../kafka";
 
 export  async function addUser(req, res, next){
     try{
@@ -42,7 +42,7 @@ export  async function addUser(req, res, next){
                                             res6.then((msg)=>{
                                                 const res7=cluster.execute(query7);
                                                 res7.then((msg)=>{
-                                                
+                                                    // publishUserEvent(req.body.ID, 'update all or create');
                                                     return res.status(200).send('user added');
                                                 }).catch(err=>{
                                                     console.log(err);

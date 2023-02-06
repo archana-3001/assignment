@@ -8,16 +8,44 @@ import bcrypt from 'bcryptjs';
 import updateValidation from "../middleware/updateValidation";
 import userupdateValidation from "../middleware/userUpdateValidation";
 import { updateAttributes } from "../controller/updateAttribute";
+import { createClient } from 'redis';
 
 const userRouter=Router();
 export const cluster=getConnection();
 
 // GET USER WITH USER ID
-userRouter.get('/', (request,  response)=>{
-    
+userRouter.get('/', async (request,  response)=>{
+    const client = createClient();
+    client.on('error', err => console.log('Redis Client Error', err));
+    await client.connect();
     // console.log(request.query);
     const keys= Object.keys(request.query);
-    if(keys.length!=0){
+    if(request.query.ID!=undefined){
+        var results={};
+        var query = `SELECT * from users WHERE ID=${request.query.ID}`;
+        let isCached = false;
+        const cacheResults =await  client.get(`${request.query.ID}`);
+            // console.log(cacheResults, cacheResults.length);
+        if (cacheResults!=null && cacheResults.length>2) {
+              isCached = true;
+              results = JSON.parse(cacheResults);
+        } else {
+            cluster.execute(query).then((res)=>{
+                results=res.rows;
+                        client.set(`${request.query.ID}`, JSON.stringify(results));
+                    }
+            ).catch(err=>{
+                    return response.status(404).json({
+                        msg: "query execution errro",
+                        error: err
+                    })
+            }); 
+              
+        }
+            // console.log(results);
+        return response.status(200).send(results);
+    }
+    else if(keys.length!=0){
         var query = `SELECT * from users WHERE `;
         const startq=query;
         for (const [key, value] of Object.entries(request.query)) {
@@ -33,7 +61,7 @@ userRouter.get('/', (request,  response)=>{
             const res=cluster.execute(query);
             res.then(val=>{
                 if(val.rows.length!=0){
-                    return response.status(200).json({msg: val.rows});
+                    return response.status(200).send(val.rows);
                 }
                 else{
                     return response.status(404).json({error: "user not found!!"});
@@ -69,13 +97,17 @@ userRouter.get('/', (request,  response)=>{
 userRouter.patch('/', updateValidation, updateAttributes);
 
 
-userRouter.delete('/', (request, response)=>{
+userRouter.delete('/', async (request, response)=>{
     console.log(request.query);
+    const client = createClient();
+    client.on('error', err => console.log('Redis Client Error', err));
+    await client.connect();
     if(request.query.ID!=undefined){
         const query=`SELECT * FROM users WHERE ID=${request.query.ID};`;
         try{
             cluster.execute(query).then((val)=>{
                 if(val.rows[0].length!=0){
+                    client.del(`${request.query.ID}`);
                     const q1=`DELETE FROM  unique_emails WHERE email='${val.rows[0].email}';`;
                     const q2=`DELETE FROM  unique_usernames WHERE Username='${val.rows[0].username}';`;
                     const q3=`DELETE FROM unique_phone_numbers WHERE Phone_number='${val.rows[0].phone_number}'; `;
