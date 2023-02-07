@@ -42,7 +42,7 @@ export  async function addUser(req, res, next){
                                             res6.then((msg)=>{
                                                 const res7=cluster.execute(query7);
                                                 res7.then((msg)=>{
-                                                    // publishUserEvent(req.body.ID, 'update all or create');
+                                                    publishUserEvent(`${id}`, 'create').then();
                                                     return res.status(200).send('user added');
                                                 }).catch(err=>{
                                                     console.log(err);

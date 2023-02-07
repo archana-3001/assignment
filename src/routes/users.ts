@@ -9,12 +9,13 @@ import updateValidation from "../middleware/updateValidation";
 import userupdateValidation from "../middleware/userUpdateValidation";
 import { updateAttributes } from "../controller/updateAttribute";
 import { createClient } from 'redis';
+import {authorize} from '../middleware/auth';
 
 const userRouter=Router();
 export const cluster=getConnection();
 
-// GET USER WITH USER ID
-userRouter.get('/', async (request,  response)=>{
+// GET USER WITH USER ID authorized 
+userRouter.get('/',authorize, async (request,  response)=>{
     const client = createClient();
     client.on('error', err => console.log('Redis Client Error', err));
     await client.connect();
@@ -93,11 +94,11 @@ userRouter.get('/', async (request,  response)=>{
     }
 });
 
-//Using the update API,  I can update a user using his/her ID.
-userRouter.patch('/', updateValidation, updateAttributes);
+//Using the update API,  I can update a user using his/her ID. authorized added
+userRouter.patch('/', authorize,updateValidation, updateAttributes);
 
 
-userRouter.delete('/', async (request, response)=>{
+userRouter.delete('/', authorize,async (request, response)=>{
     console.log(request.query);
     const client = createClient();
     client.on('error', err => console.log('Redis Client Error', err));
@@ -164,9 +165,9 @@ userRouter.delete('/', async (request, response)=>{
     }
 });
 
-// The Update API must throw an error if any of these attributes are missing. It should be able to create a new user if it is a unique user.
-userRouter.put('/', userupdateValidation, updateAttributes);
+// The Update API must throw an error if any of these attributes are missing. It should be able to create a new user if it is a unique user. authorize added
+userRouter.put('/', authorize,userupdateValidation, updateAttributes);
 
-userRouter.post('/', userValidation, addUser);
+userRouter.post('/',authorize, userValidation, addUser);
 
 export default userRouter;

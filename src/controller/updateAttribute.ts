@@ -2,6 +2,7 @@ import { cluster } from "../routes/users";
 import bcrypt from 'bcryptjs';
 import { createClient } from "redis";
 import { publishUserEvent } from "../kafka";
+import { string } from "joi";
 
 export async function updateAttributes(request, response, next) {
 console.log("update query", request.body, request.query);
@@ -138,7 +139,7 @@ if(keys.length!=0){
                        
                     }
                 }
-                // publishUserEvent(val.rows[0].id, 'update');
+                publishUserEvent(`${val.rows[0].id}`, 'update').then();
                 return response.status(200).json({msg: "all values updated!!"});
             }
             else{
