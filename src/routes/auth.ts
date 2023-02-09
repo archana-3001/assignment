@@ -10,7 +10,7 @@ const authRouter=Router();
 authRouter.post('/login', (request, response, next)=>{
     console.log(request.body);
     const password=request.body.Password; // here create hash of entered password and then match hash with stored hash
-    const query=`SELECT * from users WHERE Username= '${request.body.Username}' ALLOW FILTERING;`;
+    const query=`SELECT * from users WHERE Username= '${request.body.Username}';`;
     console.log(query);
     // // now check if password hash in table equal to generated hash 
     const res=cluster.execute(query);

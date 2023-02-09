@@ -30,10 +30,11 @@ export const run=async()=>{
 }
 
 
-export const publishUserEvent = async(userId, action) => {
+export const publishUserEvent = async(userId, action, payload) => {
     const message=JSON.stringify({
         userId,
         action,
+        payload,
         action_date: new Date().toISOString()
       })
     console.log(userId, action, "publishevent", message);

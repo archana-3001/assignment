@@ -108,7 +108,6 @@ userRouter.delete('/', authorize,async (request, response)=>{
         try{
             cluster.execute(query).then((val)=>{
                 if(val.rows[0].length!=0){
-                    client.del(`${request.query.ID}`);
                     const q1=`DELETE FROM  unique_emails WHERE email='${val.rows[0].email}';`;
                     const q2=`DELETE FROM  unique_usernames WHERE Username='${val.rows[0].username}';`;
                     const q3=`DELETE FROM unique_phone_numbers WHERE Phone_number='${val.rows[0].phone_number}'; `;
@@ -117,7 +116,9 @@ userRouter.delete('/', authorize,async (request, response)=>{
                         cluster.execute(q2).then((v2)=>{
                             cluster.execute(q3).then((v3)=>{
                                 cluster.execute(q4).then((v4)=>{
+                                    client.del(`${request.query.ID}`);
                                     return response.status(200).json({
+                                        
                                         msg: "deleted successfully !!!"
                                     })
                                 }).catch(err=>{

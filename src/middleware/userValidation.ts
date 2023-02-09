@@ -14,7 +14,7 @@ export default async function userValidation(req, res, next) {
     };
     const { error } = validation.validate(payload);
     if (error) {
-        res.status(404);
+        res.status(400);
         return res.json(
           error.message
         );
