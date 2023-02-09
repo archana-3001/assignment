@@ -18,7 +18,7 @@ export default async function updateValidation(req, res, next) {
     };
     const { error } = updatevalidation.validate(payload);
     if (error) {
-        res.status(404);
+        res.status(400);
         return res.json(
           {
             error: "validation failed"

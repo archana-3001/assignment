@@ -123,25 +123,25 @@ userRouter.delete('/', authorize,async (request, response)=>{
                                     })
                                 }).catch(err=>{
                                     return response.status(404).json({
-                                        msg: "q4 failed",
+                                        msg: `${q4} failed`,
                                         error: err
                                     })
                                 })
                             }).catch(err=>{
                                 return response.status(404).json({
-                                    msg: "q3 failed",
+                                    msg: `${q3} failed`,
                                     error: err
                                 })
                             })
                         }).catch(err=>{
                             return response.status(404).json({
-                                msg: "q2 failed",
+                                msg: `${q2} failed`,
                                 error: err
                             })
                         })
                     }).catch(err=>{
                         return response.status(404).json({
-                            msg: "q1 failed",
+                            msg: `${q1} failed`,
                             error: err
                         })
                     })
@@ -158,7 +158,7 @@ userRouter.delete('/', authorize,async (request, response)=>{
                 })
             })
         }catch(err){
-            return response.status(405).json({
+            return response.status(400).json({
                 message: " error in params",
                 error: err
             })

@@ -59,18 +59,18 @@ if(keys.length!=0){
                                             })
                                         })
                                     }).catch(err=>{
-                                        response.status(405).json({
+                                        response.status(404).json({
                                             error: err
                                         })
                                     })
                                     
                                 }else{
-                                    response.status(405).json({
+                                    response.status(400).json({
                                         error: "email exists"
                                     })
                                 }
                             }).catch(err=>{
-                                response.status(405).json({
+                                response.status(404).json({
                                     error: err
                                 })
                             })
@@ -99,18 +99,18 @@ if(keys.length!=0){
                                             })
                                         })
                                     }).catch(err=>{
-                                        response.status(405).json({
+                                        response.status(404).json({
                                             error: err
                                         })
                                     })
                                     
                                 }else{
-                                    response.status(405).json({
+                                    response.status(400).json({
                                         error: "Phone number exists"
                                     })
                                 }
                             }).catch(err=>{
-                                response.status(405).json({
+                                response.status(404).json({
                                     error: err
                                 })
                             })
@@ -119,7 +119,7 @@ if(keys.length!=0){
                             cluster.execute(`UPDATE users SET ${key}= ${value} WHERE ID= ${request.query.ID};`).then(val=>{
                                 client.del(`${request.query.ID}`);
                             }).catch((err)=>{
-                                response.status(405).json({
+                                response.status(404).json({
                                     error: err
                                 })
                             })

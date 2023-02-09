@@ -43,7 +43,7 @@ export  async function addUser(req, res, next){
                                                 const res7=cluster.execute(query7);
                                                 res7.then((msg)=>{
                                                     publishUserEvent(`${id}`, 'create', req.body).then();
-                                                    return res.status(200).send('user added');
+                                                    return res.status(201).send('user added');
                                                 }).catch(err=>{
                                                     console.log(err);
                                                 }
@@ -63,15 +63,15 @@ export  async function addUser(req, res, next){
                             }
 
                         }else{
-                            return res.status(406).json('phone number already exists');
+                            return res.status(400).json('phone number already exists');
                         }
                     })
                 }else{
-                    return res.status(406).json('email already exists');
+                    return res.status(400).json('email already exists');
                 }
             })
         }else{
-            return res.status(406).json('username already exists');
+            return res.status(400).json('username already exists');
         }
 
        })
