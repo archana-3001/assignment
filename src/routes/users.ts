@@ -22,7 +22,7 @@ userRouter.get('/',authorize, async (request,  response)=>{
     // console.log(request.query);
     const keys= Object.keys(request.query);
     if(request.query.ID!=undefined){
-        var results={};
+        let results={};
         var query = `SELECT * from users WHERE ID=${request.query.ID}`;
         let isCached = false;
         const cacheResults =await  client.get(`${request.query.ID}`);

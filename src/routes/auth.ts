@@ -22,7 +22,7 @@ authRouter.post('/login', (request, response, next)=>{
                 bcrypt.compare(password, val.rows[0].password).then((cmp)=>{
                     // console.log(cmp);
                     if(cmp && val.rows[0].is_active){
-                        let jwtToken = jwt.sign({
+                        const jwtToken = jwt.sign({
                             Username: val.rows[0].username,
                             userId: val.rows[0].id,
                             Is_admin: val.rows[0].is_admin
