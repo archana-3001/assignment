@@ -22,8 +22,8 @@ userRouter.get('/',authorize, async (request,  response)=>{
     // console.log(request.query);
     const keys= Object.keys(request.query);
     if(request.query.ID!=undefined){
-        var results={};
-        var query = `SELECT * from users WHERE ID=${request.query.ID}`;
+        let results={};
+        let query = `SELECT * from users WHERE ID=${request.query.ID}`;
         let isCached = false;
         const cacheResults =await  client.get(`${request.query.ID}`);
             // console.log(cacheResults, cacheResults.length);
@@ -47,7 +47,7 @@ userRouter.get('/',authorize, async (request,  response)=>{
         return response.status(200).send(results);
     }
     else if(keys.length!=0){
-        var query = `SELECT * from users WHERE `;
+        let query = `SELECT * from users WHERE `;
         const startq=query;
         for (const [key, value] of Object.entries(request.query)) {
             //console.log(`${key}: ${value}`);
