@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { createClient } from "redis";
 import { publishUserEvent } from "../kafka";
 
-export async function updateAttributes(request, response, next) {
+export async function updateAttributes(request, response) {
 console.log("update query", request.body, request.query);
 
 
@@ -24,7 +24,7 @@ if(keys.length!=0){
                         console.log("handling password change !!!");
                         bcrypt.hash(request.body.Password, 10).then((hash)=>{
                             const query1= `UPDATE users SET ${key}= '${hash}' WHERE ID= ${request.query.ID};`;
-                            cluster.execute(query1).then(val=>{
+                            cluster.execute(query1).then(()=>{
                                 client.del(`${request.query.ID}`);
                             }).catch((err)=>{
                                 response.status(405).json({
@@ -50,7 +50,7 @@ if(keys.length!=0){
                                         // step 2: insert into users table and then in unique_emails
                                         const query4=`INSERT INTO unique_emails(email) VALUES ('${request.body.email}')`;
                                         cluster.execute(query1).then(()=>{
-                                            cluster.execute(query4).then(val2=>{
+                                            cluster.execute(query4).then(()=>{
                                                 client.del(`${request.query.ID}`);
                                             }).catch(err=>{
                                                 response.status(404).json({
@@ -90,7 +90,7 @@ if(keys.length!=0){
                                         // step 2: insert into users table and then in unique_emails
                                         const query4=`INSERT INTO unique_phone_numbers(Phone_number) VALUES ('${request.body.Phone_number}')`;
                                         cluster.execute(query1).then(()=>{
-                                            cluster.execute(query4).then(val2=>{
+                                            cluster.execute(query4).then(()=>{
                                                 client.del(`${request.query.ID}`);
                                             }).catch(err=>{
                                                 response.status(404).json({
@@ -125,7 +125,7 @@ if(keys.length!=0){
                             })
                         }
                         else{
-                            cluster.execute(query1).then(val=>{
+                            cluster.execute(query1).then(()=>{
                                 client.del(`${request.query.ID}`);
 
                             }).catch((err)=>{
@@ -145,7 +145,7 @@ if(keys.length!=0){
             else{
                 return response.status(404).json({error: "user not found!!"});
             }
-        }).catch(err=>{
+        }).catch(()=>{
             response.redirect('/update');
             // return response.status(404).json({
             //     err: "user not exist"

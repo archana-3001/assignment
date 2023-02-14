@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 const authRouter=Router();
 
 
-authRouter.post('/login', (request, response, next)=>{
+authRouter.post('/login', (request, response)=>{
     console.log(request.body);
     const password=request.body.Password; // here create hash of entered password and then match hash with stored hash
     const query=`SELECT * from users WHERE Username= '${request.body.Username}';`;
@@ -40,7 +40,7 @@ authRouter.post('/login', (request, response, next)=>{
                             msg: "user credentials didn't match"
                         })
                     }
-                });
+                })
                 
             }
             else{
@@ -52,7 +52,7 @@ authRouter.post('/login', (request, response, next)=>{
             })
         })
     // response.send("login !!");
-});
+})
 
 
 export default authRouter;

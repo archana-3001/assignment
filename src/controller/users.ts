@@ -1,10 +1,9 @@
-import { stat } from "fs";
 import { cluster } from "../routes/users";
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import { publishUserEvent } from "../kafka";
 
-export  async function addUser(req, res, next){
+export  async function addUser(req, res){
     try{
        // write code to validate
        const id = uuidv4(); 
@@ -81,7 +80,7 @@ export  async function addUser(req, res, next){
         return res.status(400).json({
             error: "error in hash creation"
         })
-    };
+    }
 }
 
 
