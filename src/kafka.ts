@@ -21,8 +21,9 @@ export const run=async()=>{
             console.log("messages value :",message.value.toString());
             // messages.push(message.value.toString());
             // console.log("all messages: ", messages);
+            console.log(topic, partition);
             fs.appendFile('./activity.txt', message.value.toString(), (err)=>{
-            // console.log(err);
+            console.log(err);
             });
         },
     })

@@ -116,7 +116,7 @@ if(keys.length!=0){
                             })
                         }
                         else if(`${key}`=='Is_active' || `${key}`=='Is_admin'){
-                            cluster.execute(`UPDATE users SET ${key}= ${value} WHERE ID= ${request.query.ID};`).then(val=>{
+                            cluster.execute(`UPDATE users SET ${key}= ${value} WHERE ID= ${request.query.ID};`).then(()=>{
                                 client.del(`${request.query.ID}`);
                             }).catch((err)=>{
                                 response.status(404).json({

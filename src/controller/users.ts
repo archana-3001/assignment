@@ -34,13 +34,13 @@ export  async function addUser(req, res){
                                 
                                     console.log(req.body.Password);
                                     const res4=cluster.execute(query4);
-                                    res4.then(msg=>{
+                                    res4.then(()=>{
                                         const res5=cluster.execute(query5);
-                                        res5.then(msg=>{
+                                        res5.then(()=>{
                                             const res6=cluster.execute(query6);
-                                            res6.then((msg)=>{
+                                            res6.then(()=>{
                                                 const res7=cluster.execute(query7);
-                                                res7.then((msg)=>{
+                                                res7.then(()=>{
                                                     publishUserEvent(`${id}`, 'create', req.body).then();
                                                     return res.status(201).send('user added');
                                                 }).catch(err=>{
