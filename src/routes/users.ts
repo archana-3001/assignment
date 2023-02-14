@@ -1,10 +1,8 @@
 //  create/update/read/delete users from the system
-import  { Router, response, query } from "express";
-import { request } from "http";
+import  { Router } from "express";
 import userValidation from "../middleware/userValidation";
 import {addUser} from "../controller/users";
 import {getConnection } from '../db'; 
-import bcrypt from 'bcryptjs';
 import updateValidation from "../middleware/updateValidation";
 import userupdateValidation from "../middleware/userUpdateValidation";
 import { updateAttributes } from "../controller/updateAttribute";
@@ -23,12 +21,12 @@ userRouter.get('/',authorize, async (request,  response)=>{
     const keys= Object.keys(request.query);
     if(request.query.ID!=undefined){
         let results={};
-        let query = `SELECT * from users WHERE ID=${request.query.ID}`;
-        let isCached = false;
+        const query = `SELECT * from users WHERE ID=${request.query.ID}`;
+        // let isCached = false;
         const cacheResults =await  client.get(`${request.query.ID}`);
             // console.log(cacheResults, cacheResults.length);
         if (cacheResults!=null && cacheResults.length>2) {
-              isCached = true;
+            //   isCached = true;
               results = JSON.parse(cacheResults);
         } else {
             cluster.execute(query).then((res)=>{
@@ -112,10 +110,10 @@ userRouter.delete('/', authorize,async (request, response)=>{
                     const q2=`DELETE FROM  unique_usernames WHERE Username='${val.rows[0].username}';`;
                     const q3=`DELETE FROM unique_phone_numbers WHERE Phone_number='${val.rows[0].phone_number}'; `;
                     const q4=`DELETE FROM users WHERE ID=${val.rows[0].id}; `;
-                    cluster.execute(q1).then((v1)=>{
-                        cluster.execute(q2).then((v2)=>{
-                            cluster.execute(q3).then((v3)=>{
-                                cluster.execute(q4).then((v4)=>{
+                    cluster.execute(q1).then(()=>{
+                        cluster.execute(q2).then(()=>{
+                            cluster.execute(q3).then(()=>{
+                                cluster.execute(q4).then(()=>{
                                     client.del(`${request.query.ID}`);
                                     return response.status(200).json({
                                         

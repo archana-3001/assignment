@@ -1,10 +1,9 @@
 import { Router } from "express";
-import {kafka, consumer} from '../kafka';
 import fs from 'fs';
 const activityRouter=Router();
 
 
-activityRouter.get('/', async (request,  response)=>{
+activityRouter.get('/', async (request ,  response)=>{
     try {
         const data = fs.readFileSync('activity.txt', 'utf8');
         // console.log(data);

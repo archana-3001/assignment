@@ -1,5 +1,4 @@
-import  { Router, response, query } from "express";
-import { request } from "http";
+import  { Router } from "express";
 import { cluster } from "./users";
 import * as jwt from "jsonwebtoken";
 import bcrypt from 'bcryptjs';

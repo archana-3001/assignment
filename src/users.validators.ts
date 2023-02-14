@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { ValidationErrorFunction } from "joi";
+// import { ValidationErrorFunction } from "joi";
 
 const validation=Joi.object({
     First_name: Joi.string().required(),

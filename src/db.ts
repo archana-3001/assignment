@@ -2,8 +2,6 @@ import cassandra from 'cassandra-driver';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const {NODE_IP, DATA_CENTER, KEY_SPACE}=process.env;
-
 // connect to databse
 
 export const getConnection=()=>{ 
