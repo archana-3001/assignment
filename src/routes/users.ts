@@ -169,4 +169,5 @@ userRouter.put('/', authorize,userupdateValidation, updateAttributes);
 
 userRouter.post('/',authorize, userValidation, addUser);
 
+
 export default userRouter;
