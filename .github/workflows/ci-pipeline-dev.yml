@@ -1,0 +1,47 @@
+name: Dev test-arc build and publish  
+
+on:
+ push:
+   branches:
+     - 'entity_v2'
+   paths-ignore:
+    - "deploy/**"
+env:
+ SERVICE_DIRECTORY: "."
+ BRANCH: "entity_v2"
+ ECR_REPO: platform-solutions/test-arc
+
+jobs:
+ setup-build-publish-deploy-dev:
+   name: Setup, Build, Publish, and Deploy
+   runs-on: ubuntu-latest
+   steps:
+     - name: Checkout
+       uses: actions/checkout@v2
+
+    - name: get aws ecr access
+     - uses: docker://ghcr.io/kciter/aws-ecr-action:latest
+       with:
+         access_key_id: ${{ secrets.PLATFORM_AWS_ACCESS_KEY_preprod}}
+         secret_access_key: ${{ secrets.PLATFORM_AWS_SECRET_KEY_preprod }}
+         account_id: ${{ secrets.PLATFORM_AWS_ACCOUNT_ID_preprod }}
+         repo:  ${{ env.ECR_REPO }}
+         region: ${{ secrets.PLATFORM_AWS_REGION_preprod }}
+         create_repo: true
+         set_repo_policy: false
+         image_scanning_configuration: true
+         tags: ${{ steps.version.outputs.app_version }}-dev-${{ steps.version.outputs.commit }}
+         dockerfile: ${{ env.SERVICE_DIRECTORY }}/Dockerfile
+         extra_build_args: "--build-arg ssh_prv_key=${{ steps.version.outputs.private_key }} --build-arg ssh_pub_key=${{ steps.version.outputs.public_key }}"
+         path: "."
+    
+     - name: Update Image version to auto-deploy
+       uses: fjogeleit/yaml-update-action@v0.6.2
+       with:
+         valueFile: "deploy/deploy-values-dev.yaml"
+         propertyPath: "apps.test-arc.image.version"
+         value: ${{ steps.version.outputs.app_version }}-dev-${{ steps.version.outputs.commit }}
+         branch: ${{ env.BRANCH }}
+         message: "Update Image Version to ${{ steps.version.outputs.app_version }}-dev-${{ steps.version.outputs.commit }}"
+         commitChange: 'true'
+         updateFile: 'true'  
