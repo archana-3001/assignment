@@ -13,7 +13,6 @@ env:
 
 jobs:
  setup-build-publish-deploy-dev:
-   name: Setup, Build, Publish, and Deploy
    runs-on: ubuntu-latest
    steps:
      - name: Checkout
