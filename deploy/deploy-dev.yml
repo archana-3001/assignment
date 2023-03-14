@@ -1,0 +1,55 @@
+env: dev
+namespace: platform-solutions-dev
+service_name: test-arc
+gateway_name: fxtrt-apps-dev
+apps:
+  fpa:
+    replicaCount: 1
+    image:
+      repository: 217425097687.dkr.ecr.ap-south-1.amazonaws.com/platform-solutions/test-arc
+      version: 1.0.0-dev-c5cd14c
+    resourceType: m1
+    api:
+      path: /app/test-arc
+      health: /app/test-arc/ping
+    envVars:
+      - name: SSL_MODE
+        value: require
+      - name: TENANT_ID_REGEX
+        value: ^al.*
+      - name: ENTITY_TOPIC
+        value: ^al.*_entity_service_STAGE$
+    port: 3001
+    corsHeaders:
+      - X-COREOS-TID
+      - X-COREOS-ACCESS
+      - X-COREOS-USERINFO
+      - X-COREOS-REQUEST-ID
+      - Content-Type
+    externalAccess:
+      enabled: true
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 1
+      targetCPUUtilizationPercentage: 80
+      targetMemoryUtilizationPercentage: 80
+    healthProbe:
+      alive:
+        apiPath: /app/test-arc/ping
+        initialDelay: 60
+      ready:
+        apiPath: /app/test-arc/ping
+        initialDelay: 60
+    authentication:
+      enabled: true
+    public:
+      - paths:
+          - /app/test-arc/callback
+        methods:
+          - get
+      - paths:
+          - /app/test-arc/ping
+        methods:
+          - get
+ 

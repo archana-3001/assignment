@@ -6,11 +6,13 @@ import  { Router } from "express";
 import { addUser, updateUser } from "../controller/users";
 import userValidation from "../../middleware/userValidation";
 import updateValidation from "../../middleware/updateValidation";
+import { sign } from "crypto";
 const crypto = require('crypto');
 const userRouter=Router();
 
 //API to get information of all Entities of entity type specified by EntityTypePluralName, based on the filters specified.
 userRouter.get('/', async (req, res)=>{
+    // console.log(req.body.token);
     var query='{"op": "and","arr":[{ "key": "IsDeleted", "value": false }'
     // console.log(req.query);
     if((Object.entries(req.query)).length>0){
@@ -26,19 +28,14 @@ userRouter.get('/', async (req, res)=>{
         const obj= {
             "url": url
         }
-        const payload = JSON.stringify(obj);
-        const callbackSecret = process.env.CALLBACK_SECRET;
-        const concatenatedString = payload + callbackSecret;
-        const signature = crypto.createHash('sha256').update(concatenatedString).digest('hex');
-        console.log(signature)
+        
     const results=await axios.get(url, {
         headers:{
             'Accept': 'application/json',
             'X-COREOS-REQUEST-ID': process.env.REQUEST_ID,
             'X-COREOS-TID': process.env.TID,
-            'X-COREOS-ACCESS': process.env.TOKEN,
-            'X-COREOS-CALLBACK-SECRET': process.env.CALLBACK_SECRET,
-            'X-COREOS-HMAC-SIGNATURE': signature
+            'X-COREOS-ACCESS': req.headers.token,
+   
         },
        
         
@@ -60,7 +57,7 @@ userRouter.get('/:entityID', async (req, res)=>{
                 'Accept': 'application/json',
                 'X-COREOS-REQUEST-ID': process.env.REQUEST_ID,
                 'X-COREOS-TID': process.env.TID,
-                'X-COREOS-ACCESS': process.env.TOKEN
+                'X-COREOS-ACCESS': req.headers.token
             }
         });
         const val=await results;
@@ -79,5 +76,26 @@ userRouter.post('/', userValidation, addUser)
 
 //API to update core attributes of a Entity specified by EntityId.
 userRouter.put('/:entityID', updateValidation, updateUser);
+
+//callback
+userRouter.post('/callback', (req, res)=>{
+    const signature=req.header('x-coreos-hmac-signature')
+    const callbackSecret=req.header('x-coreos-callback-secret');
+    console.log(signature, "\t", callbackSecret, "\t", typeof(callbackSecret));
+    // console.log(req.body);
+    const payload = JSON.stringify(req.body);
+    console.log(payload)
+    const concatenatedString = String(payload) + callbackSecret;
+    const newsignature=crypto.createHash('sha256').update(concatenatedString).digest('hex');
+    // console.log(req.headers.x-coreos-hmac-signature);
+    console.log(req.rawTrailers)
+    console.log(newsignature)
+    if(signature==newsignature){
+        return res.status(201).json(req.body
+            );
+    }
+    return res.send("callback!");
+
+});
 
 export default userRouter;

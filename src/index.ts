@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 // import authRouter from './routes/auth';
 // import activityRouter from './routes/activity';
 
-import userEntity from './entityService/routes/userEntity';
+// import userEntity from './entityService/routes/userEntity';
 //import userRouter from './entityService/routes/users';
 
 import userRouter from './entityService_v2/routes/users';

@@ -5,13 +5,16 @@ const crypto = require('crypto');
 
 export  async function addUser(req, res){
     console.log("user create request")
+    // console.log(req.headers.token);
     try{
        // write code to validate
         // Encrypt the message with AES encryption
         var key = "alpha";
         const url=process.env.ENTITY_SERVICE_ENDPOINT+'apps/'+process.env.APP_ID+'/'+process.env.ENTITY_TYPE_PLURAL_NAME;
-        const callbackURL="https://webhook.site/523da379-a7ea-435e-875e-82bbc17459f0"
+        const callbackURL="/callback";
         console.log(url)
+        
+        
         // const hash = crypto.createHash('sha256').update(callback).digest('hex');
        const obj={
             "uniqueCode": String(req.body.Username),
@@ -26,24 +29,28 @@ export  async function addUser(req, res){
                 "LastName": String(req.body.Last_name),
                 "IsActive": String(req.body.Is_active),
                 "IsAdmin": String(req.body.Is_admin),
-                "IsDeleted": {
-                    "ownerAppId": "2r5hDxz6J2W5a0wMbJFpjwkg6fOGj8C2",
+                "IsDeleted": false, 
                     
-                }
             },
             "callback": {
                 "url": callbackURL
             }
        }
-        
+       const payload = JSON.stringify(obj);
+       const callbackSecret = process.env.CALLBACK_SECRET;
+       const concatenatedString = payload + callbackSecret;
+       const signature = crypto.createHash('sha256').update(concatenatedString).digest('hex');
+       console.log(signature)
+       console.log(obj)
         const results=await axios.post(url, obj, {
             headers:{
                 'Accept': 'application/json',
                 'X-COREOS-REQUEST-ID': process.env.REQUEST_ID,
                 'X-COREOS-TID': process.env.TID,
-                'X-COREOS-ACCESS': process.env.TOKEN,
-                'X-COREOS-ORIGIN-TOKEN': process.env.TOKEN,
-                'X-COREOS-CALLBACK-SECRET': process.env.CALLBACK_SECRET
+                'X-COREOS-ACCESS': req.headers.token,
+                'X-COREOS-ORIGIN-TOKEN': req.headers.token,
+                'X-COREOS-CALLBACK-SECRET': process.env.CALLBACK_SECRET,
+                'X-COREOS-HMAC-SIGNATURE': signature
             },
         });
         const val=await results;
@@ -61,6 +68,7 @@ export  async function addUser(req, res){
 
 
 export async function updateUser(req, res) {
+    // console.log(req.headers.token);
     try{
         console.log(process.env.ENTITY_SERVICE_ENDPOINT+'apps/'+process.env.APP_ID+'/'+process.env.ENTITY_TYPE_PLURAL_NAME+'/'+req.params.entityID);
         const obj={
@@ -97,8 +105,8 @@ export async function updateUser(req, res) {
                 'Accept': 'application/json',
                 'X-COREOS-REQUEST-ID': process.env.REQUEST_ID,
                 'X-COREOS-TID': process.env.TID,
-                'X-COREOS-ACCESS': process.env.TOKEN,
-                'X-COREOS-ORIGIN-TOKEN': process.env.TOKEN,
+                'X-COREOS-ACCESS': req.headers.token,
+                'X-COREOS-ORIGIN-TOKEN': req.headers.token,
 
             },
         })
@@ -113,4 +121,5 @@ export async function updateUser(req, res) {
         })
     }
 }
+
 
