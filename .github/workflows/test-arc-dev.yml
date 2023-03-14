@@ -9,7 +9,7 @@ on:
 
 env:
   SERVICE_DIRECTORY: "."
-  SERVICE_DIRECTORY_FPA: "app/"
+  SERVICE_DIRECTORY_FPA: "/app"
   ECR_REPO: "platform-solutions/test-arc"
   BRANCH: "entity_v2"
 
