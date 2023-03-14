@@ -9,7 +9,7 @@ on:
 
 env:
   SERVICE_DIRECTORY: "."
-  SERVICE_DIRECTORY_FPA: "apps/fpa"
+  SERVICE_DIRECTORY_FPA: "."
   ECR_REPO: "platform-solutions/test-arc"
   BRANCH: "entity_v2"
 
@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build Application Code of Routing FPA server
+      - name: Build Application Code
         uses: docker://ghcr.io/kciter/aws-ecr-action:latest
         with:
           access_key_id: ${{ secrets.PLATFORM_AWS_ACCESS_KEY_PREPROD}}
